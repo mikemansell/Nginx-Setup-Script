@@ -1,0 +1,22 @@
+I wrote this script to download, build, and use the popular Nginx HTTPd as well as the
+basic dependancies that it needs in order to run.  When I was hosting a website on my
+personal VPS, I simply ran Nginx as my Linux user (using port 8080 and using IPTable to
+redirect port 80 to 8080), however you could just as easily run the HTTPd as an isolated
+web user given you're willing to spend a few minuts in order to set up permissions.
+
+To set up, create a directory where you want to house the HTTPd.  Then move (cd) into said
+directory, move the script into it, edit the script for the "PREFIX" value, chmod +x
+the script, and run `./script build all`
+
+Because it downloads and compiles everything that it needs, it's going to take a few
+minutes to set up.  Be patient.
+
+The script also accepts paramaters for "start", "stop", and "rehash", which controls both
+the HTTPd and spawn-fcgi for PHP.
+
+IT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE;
