@@ -108,6 +108,7 @@ if [ "$1" = "build" ]; then
 		$0 build libzlib
 		$0 build libxml
 		$0 build curl
+		$0 build libmcrypt
 		$0 build php
 		$0 build spawnfcgi
 		$0 build nginx
