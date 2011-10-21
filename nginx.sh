@@ -80,7 +80,7 @@ if [ "$1" = "build" ]; then
 
 		wget -O $prefix/source/php-$vPHP.tar.gz http://www.php.net/get/php-$vPHP.tar.gz/from/this/mirror
 		tar -C $prefix/source -xvf $prefix/source/php-$vPHP.tar.gz
-		cd $prefix/source/php-$vPHP && ./configure --prefix=$prefix --with-curl --enable-sockets --with-libxml-dir=$prefix --with-curl=$prefix --with-mysql=$prefix --with-mcrypt=$prefix --enable-mbstring
+		cd $prefix/source/php-$vPHP && ./configure --prefix=$prefix --with-curl --enable-sockets --with-libxml-dir=$prefix --with-curl=$prefix --with-mysql=$prefix --with-zlib=$prefix --with-mcrypt=$prefix --enable-mbstring
 		make -C $prefix/source/php-$vPHP
 		make -C $prefix/source/php-$vPHP install
 
