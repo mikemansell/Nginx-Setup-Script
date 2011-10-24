@@ -16,7 +16,7 @@ if [ "$1" = "build" ]; then
 	vPHP="5.3.8"
 	vNginx="1.0.6"
 
-	mkdir $prefix/source
+	mkdir -p $prefix/source
 
 	if [ "$2" = "mariadb" ]; then
 
@@ -25,8 +25,6 @@ if [ "$1" = "build" ]; then
 		cd $prefix/source/mariadb-$vMariaDB && ./configure --prefix=$prefix --without-plugin-innodb_plugin --with-embedded-server
 		make -C $prefix/source/mariadb-$vMariaDB
 		make -C $prefix/source/mariadb-$vMariaDB install
-		$prefix/source/mariadb-5.2.9/scripts/mysql_install_db --user=$USER
-		$prefix/share/mysql/mysql.server start && $prefix/bin/mysql_secure_installation && $prefix/share/mysql/mysql.server stop
 
 	elif [ "$2" = "openssl" ]; then
 
@@ -114,6 +112,14 @@ if [ "$1" = "build" ]; then
 		$0 build nginx
 
 	fi
+	
+elif [ "$1" = "setupconfig" ]; then
+
+	$prefix/source/mariadb-5.2.9/scripts/mysql_install_db --user=$USER
+	$prefix/share/mysql/mysql.server start && $prefix/bin/mysql_secure_installation && $prefix/share/mysql/mysql.server stop
+	mkdir -p $prefix/sites/default/resources && mv $prefix/html $prefix/sites/default/public
+	rm $prefix/conf/nginx.conf && wget -O $prefix/conf/nginx.conf https://raw.github.com/mikemansell/Nginx-Setup-Script/master/configfiles/nginx.conf
+	wget -O $prefix/conf/php https://raw.github.com/mikemansell/Nginx-Setup-Script/master/configfiles/php
 
 elif [ "$1" = "start" ]; then
 
