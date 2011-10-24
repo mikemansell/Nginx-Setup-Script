@@ -1,6 +1,6 @@
 I wrote this script to download, build, and use the popular Nginx HTTPd as well as the
 basic dependancies that it needs in order to run.  When I was hosting a website on my
-personal VPS, I simply ran Nginx as my Linux user (using port 8080 and using IPTable to
+personal VPS, I simply ran Nginx as my Linux user (using port 8080 and using IPTables to
 redirect port 80 to 8080), however you could just as easily run the HTTPd as an isolated
 web user given you're willing to spend a few minuts in order to set up permissions.
 
@@ -9,10 +9,13 @@ directory, move the script into it, edit the script for the "PREFIX" value, chmo
 the script, and run `./script build all`
 
 Because it downloads and compiles everything that it needs, it's going to take a few
-minutes to set up.  Be patient.
+minutes (~20m on a decent VPS) to set up.  Be patient.
 
 The script also accepts paramaters for "start", "stop", and "rehash", which controls both
-the HTTPd and spawn-fcgi for PHP.
+the HTTPd and spawn-fcgi for PHP, as well as MariaDB.
+
+While I started this as a simple script for *just* Nginx, I quickly gave into adding PHP
+and MariaDB (MySQL replacement) support to create a fully functional "LAMP" replacement.
 
 IT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
 BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
