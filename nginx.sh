@@ -6,6 +6,7 @@ prefix="$HOME/httpd"
 if [ "$1" = "build" ]; then
 
 	# Define our version numbers
+	vNcurses="5.9"
 	vMariaDB="5.2.9"
 	vOpenSSL="1.0.0d"
 	vPCRE="8.12"
@@ -18,11 +19,19 @@ if [ "$1" = "build" ]; then
 
 	mkdir -p $prefix/source
 
-	if [ "$2" = "mariadb" ]; then
+	if [ "$2" = "ncurses" ]; then
+
+		wget -O $prefix/source/ncurses-$vNcurses.tar.gz http://ftp.gnu.org/pub/gnu/ncurses/ncurses-$vNcurses.tar.gz
+		tar -C $prefix/source -xvf $prefix/source/ncurses-$vNcurses.tar.gz
+		cd $prefix/source/ncurses-$vNcurses && ./configure --prefix=$prefix
+		make -C $prefix/source/ncurses-$vNcurses
+		make -C $prefix/source/ncurses-$vNcurses install
+
+	elif [ "$2" = "mariadb" ]; then
 
 		wget -O $prefix/source/mariadb-$vMariaDB.tar.gz http://downloads.askmonty.org/f/mariadb-$vMariaDB/kvm-tarbake-jaunty-x86/mariadb-$vMariaDB.tar.gz/from/http://mirror.layerjet.com/mariadb
 		tar -C $prefix/source -xvf $prefix/source/mariadb-$vMariaDB.tar.gz
-		cd $prefix/source/mariadb-$vMariaDB && ./configure --prefix=$prefix --without-plugin-innodb_plugin --with-embedded-server
+		cd $prefix/source/mariadb-$vMariaDB && LDFLAGS="-L$prefix/lib" ./configure --prefix=$prefix --without-plugin-innodb_plugin --with-embedded-server
 		make -C $prefix/source/mariadb-$vMariaDB
 		make -C $prefix/source/mariadb-$vMariaDB install
 
@@ -94,12 +103,13 @@ if [ "$1" = "build" ]; then
 
 		wget -O $prefix/source/nginx-$vNginx.tar.gz http://nginx.org/download/nginx-$vNginx.tar.gz
 		tar -C $prefix/source -xvf $prefix/source/nginx-$vNginx.tar.gz
-		cd $prefix/source/nginx-$vNginx && ./configure --prefix=$prefix --pid-path=$prefix/nginx.pid --with-pcre=../pcre-$vPCRE --with-openssl=$prefix/lib --user=$USER --group=$USER
+		cd $prefix/source/nginx-$vNginx && ./configure --prefix=$prefix --pid-path=$prefix/nginx.pid --with-pcre=../pcre-$vPCRE --with-zlib=../zlib-$vZlib --with-openssl=$prefix/lib --user=$USER --group=$USER
 		make -C $prefix/source/nginx-$vNginx
 		make -C $prefix/source/nginx-$vNginx install
 
 	elif [ "$2" = "all" ]; then
 
+		$0 build ncurses
 		$0 build mariadb
 		$0 build openssl
 		$0 build pcre
