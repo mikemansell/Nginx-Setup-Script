@@ -1,3 +1,8 @@
+,---.|              |    
+|---||---.,---..   .|--- 
+|   ||   ||   ||   ||    
+`   '`---'`---'`---'`---'
+
 I wrote this script to download, build, and use the popular Nginx HTTPd as well as the
 basic dependancies that it needs in order to run.  When I was hosting a website on my
 personal VPS, I simply ran Nginx as my Linux user (using port 8080 and using IPTables to
@@ -16,6 +21,58 @@ the HTTPd and spawn-fcgi for PHP, as well as MariaDB.
 
 While I started this as a simple script for *just* Nginx, I quickly gave into adding PHP
 and MariaDB (MySQL replacement) support to create a fully functional "LAMP" replacement.
+
+===========================================================================================
+
+                         
+,---.     |              
+`---.,---.|--- .   .,---.
+    ||---'|    |   ||   |
+`---'`---'`---'`---'|---'
+                    |  
+
+So, you want to install it, eh?  The setup process is pretty simple (after all, that's the
+purpose of the script).  You *should* be able to get the just of everything by poking around
+the nginx.sh file, but for those of you that want to get going right away, here's how I
+personally use this script on my own installations.
+
+      - Install "build-essential" (if you're a Debain user) or the equivelant package for
+        your distro.
+
+      - Make a folder for the HTTPd;
+        `mkdir $HOME/httpd`
+
+      - Move into your newly created folder;
+        `cd $HOME/httpd`
+
+      - Download this script;
+        `wget -O nginx https://raw.github.com/mikemansell/Nginx-Setup-Script/master/nginx.sh`
+
+      - Edit the script, changing the "PREFIX" value (defaulted to "$HOME/httpd") to the proper
+        folder for your setup.  I use nano as my terminal-based text editor, so `nano nginx`
+        works perfect for me.
+
+      - Make the script executable;
+        `chmod +x ./nginx`
+
+      - Start the build process;
+        `./nginx build all`
+
+      - Replace the included configuration files with sane ones;
+        `./nginx setupconfig`
+
+      - Poke around the config directory change things as needed
+
+      - Start the HTTPd, PHP daemon, and MariaDB
+        `./nginx start`
+
+===========================================================================================
+
+|                   |        ,---.          |                   
+|    ,---.,---.,---.|        |  _.,---.,---.|---.,---.,---.,---.
+|    |---'|   |,---||        |   |,---||    |   |,---||   ||---'
+`---'`---'`---|`---^`---'    `---'`---^`    `---'`---^`---|`---'
+          `---'                                       `---'     
 
 IT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
 BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
