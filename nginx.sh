@@ -15,7 +15,7 @@ if [ "$1" = "build" ]; then
 	vCurl="7.21.7"
 	vlibmcrypt="2.5.8"
 	vPHP="5.3.8"
-	vNginx="1.0.6"
+	vNginx="1.0.10"
 
 	mkdir -p $prefix/source
 
