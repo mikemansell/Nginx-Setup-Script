@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# Where are we placing our build?
+prefix="$HOME/httpd"
+
+if [ "$1" = "build" ]; then
+
+	# Define our version numbers
+	vOpenSSL="1.0.2a"
+	vZlib="1.2.8"
+	vCurl="7.41.0"
+	vNginx="1.7.11"
+
+	mkdir -p $prefix/source
+
+
+	elif [ "$2" = "openssl" ]; then
+
+		wget -O $prefix/source/openssl-$vOpenSSL.tar.gz http://www.openssl.org/source/openssl-$vOpenSSL.tar.gz
+		tar -C $prefix/source -xvf $prefix/source/openssl-$vOpenSSL.tar.gz
+		cd $prefix/source/openssl-$vOpenSSL && ./config --prefix=$prefix --openssldir=$prefix/openssl
+		make -C $prefix/source/openssl-$vOpenSSL
+		make -C $prefix/source/openssl-$vOpenSSL install
+
+
+	elif [ "$2" = "libzlib" ]; then
+
+		wget -O $prefix/source/zlib-$vZlib.tar.gz http://zlib.net/zlib-$vZlib.tar.gz
+		tar -C $prefix/source -xvf $prefix/source/zlib-$vZlib.tar.gz
+		cd $prefix/source/zlib-$vZlib && ./configure --prefix=$prefix
+		make -C $prefix/source/zlib-$vZlib
+		make -C $prefix/source/zlib-$vZlib install
+
+
+	elif [ "$2" = "curl" ]; then
+
+		wget -O $prefix/source/curl-$vCurl.tar.gz http://curl.haxx.se/download/curl-$vCurl.tar.gz
+		tar -C $prefix/source -xvf $prefix/source/curl-$vCurl.tar.gz
+		cd $prefix/source/curl-$vCurl && ./configure --prefix=$prefix
+		make -C $prefix/source/curl-$vCurl
+		make -C $prefix/source/curl-$vCurl install
+
+	elif [ "$2" = "nginx" ]; then
+
+		wget -O $prefix/source/nginx-$vNginx.tar.gz http://nginx.org/download/nginx-$vNginx.tar.gz
+		tar -C $prefix/source -xvf $prefix/source/nginx-$vNginx.tar.gz
+		cd $prefix/source/nginx-$vNginx && ./configure --prefix=$prefix --pid-path=$prefix/nginx.pid --with-zlib=../zlib-$vZlib --with-http_ssl_module --user=$USER --group=$USER
+		make -C $prefix/source/nginx-$vNginx
+		make -C $prefix/source/nginx-$vNginx install
+
+	elif [ "$2" = "all" ]; then
+
+		$0 build openssl
+		$0 build libzlib
+		$0 build curl
+		$0 build nginx
+
+	fi
+	
+elif [ "$1" = "setupconfig" ]; then
+
+	mkdir -p $prefix/sites/default/resources && mv $prefix/html $prefix/sites/default/public
+	rm $prefix/conf/nginx.conf && wget -O $prefix/conf/nginx.conf https://raw.github.com/mikemansell/Nginx-Setup-Script/master/configfiles/nginx.conf
+	wget -O $prefix/conf/php https://raw.github.com/mikemansell/Nginx-Setup-Script/master/configfiles/php
+
+elif [ "$1" = "start" ]; then
+
+	echo "Launching Nginx..."
+	$prefix/sbin/nginx
+
+elif [ "$1" = "stop" ]; then
+
+	echo "Finding PID file for Nginx..."
+	if [ -f $prefix/nginx.pid ]; then
+		PID_HTTPD=`cat $prefix/nginx.pid`
+	fi
+	if [ "$PID_HTTPD" = "" ]; then
+		echo "Could not find a PID for Nginx.  Nothing to kill."
+	else
+		echo "Found PID $PID_HTTPD...killing process..."
+		kill $PID_HTTPD
+		rm -f $prefix/nginx.pid
+	fi
+
+	PID_FCGI=""
+	PID_HTTPD=""
+
+
+elif [ "$1" = "restart" ]; then
+
+	$0 stop
+	$0 start
+
+elif [ "$1" = "rehash" ]; then
+
+	if [ -f $prefix/nginx.pid ]; then
+		echo "Rehashing Nginx..."
+		$prefix/sbin/nginx -s reload
+	else
+		echo "Nginx doesn't appear to be running."
+	fi
+
+fi
